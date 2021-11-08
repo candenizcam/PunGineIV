@@ -1,5 +1,6 @@
 package pungine
 
+import com.soywiz.korge.internal.KorgeInternal
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Image
 import com.soywiz.korge.view.ViewFileRef

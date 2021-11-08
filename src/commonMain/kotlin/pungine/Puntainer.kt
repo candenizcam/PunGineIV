@@ -28,6 +28,8 @@ open class Puntainer: Container {
     var relativeRectangle = oneRectangle()
     private set
 
+    var virtualRectangle: Rectangle = Rectangle(0.0,100.0,0.0,100.0)
+
     fun sizeRectangle(frameRectangle: Rectangle):Rectangle = frameRectangle.fromRated(relativeRectangle)
 
 
@@ -36,6 +38,7 @@ open class Puntainer: Container {
      */
     fun fitToFrame(frameRectangle: Rectangle){
         val s = sizeRectangle(frameRectangle)
+        this.virtualRectangle = sizeRectangle(frameRectangle)
         var childrenThatMatters = 0
         forEachChild {
             if(it is Puntainer){
@@ -51,8 +54,18 @@ open class Puntainer: Container {
     }
 
 
+    var yConv: Double = 0.0
+        get(){
+            return InternalGlobalAccess.virtualSize.height.toDouble()-super.y
+        }
+        set(value) {
+            field = value
+            super.y = InternalGlobalAccess.virtualSize.height.toDouble()-value
+        }
+
+
     fun singleColour(colour: RGBA =Colors.WHITE): Puntainer {
-        solidRect(120.0,120.0,colour)
+        solidRect(virtualRectangle.width,virtualRectangle.height,colour)
         return this
     }
 

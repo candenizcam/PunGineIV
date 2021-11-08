@@ -31,6 +31,8 @@ class TestScene: PunScene() {
 
 
 
+
+
         super.sceneAfterInit()
     }
 
@@ -43,6 +45,8 @@ class TestScene: PunScene() {
         val img = punImage("id",resourcesVfs["pungo_transparent.png"].readBitmap(), Rectangle(390.0,890.0,110.0,610.0)).also {
             it.visible = false
         }
+
+
 
 
         val resource = resourcesVfs["PunGine.png"].readBitmap()
