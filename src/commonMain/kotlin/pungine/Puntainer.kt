@@ -131,7 +131,7 @@ open class Puntainer: Container {
 
     fun punImage(id: String?=null, relativeRectangle: Rectangle, bitmap: Bitmap): Puntainer{
         return PunImage(id,bitmap).also {
-            this.addPuntainer(it,relativeRectangle)
+            this.addPuntainer(it,relativeRectangle,true)
         }
     }
 
