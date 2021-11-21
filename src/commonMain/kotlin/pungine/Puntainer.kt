@@ -14,18 +14,21 @@ import pungine.geometry2D.oneRectangle
  *
  */
 open class Puntainer: Container {
-    constructor(id: String?=null) : super(){
+    /*
+    constructor(id: String?=null, zOrder: Int? = null) : super(){
         this.id = id
     }
+
+     */
 
     /** The rectangle in this function is relative to its surroundings and is used for later reference
      *
      */
-    constructor(id: String?=null, relativeRectangle: Rectangle) : super(){
+    constructor(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), zOrder: Int= 0) : super(){
         this.id = id
         this.position(x,y)
         this.relativeRectangle = relativeRectangle
-
+        this.zOrder=zOrder
     }
 
     val id: String? //in this version, id is optional, it is null unless user wants to find it
@@ -34,6 +37,8 @@ open class Puntainer: Container {
         private set
 
     var virtualRectangle: Rectangle = InternalGlobalAccess.virtualRect
+
+    var zOrder: Int = 0
 
 
 
@@ -76,6 +81,30 @@ open class Puntainer: Container {
     val puntainers= mutableListOf<Puntainer>()
 
 
+    /** puntainers are sorted based on z order
+     * default z order is 0
+     */
+    fun sortPuntainersByZ(lowToBottom: Boolean=false){
+        val size = puntainers.size
+        val pairs = puntainers.mapIndexed {index,it->
+            Pair(index.toDouble()/size.toDouble() + it.zOrder,it)
+        }
+
+        pairs.sortedBy { it.first }.forEachIndexed {index, it->
+            it.second.index = index
+        }
+
+        puntainers.sortBy { it.index }
+        children.sortBy { it.index }
+        if(lowToBottom){
+            puntainers.reverse()
+            children.reverse()
+        }
+    }
+
+
+
+
     fun singleColour(colour: RGBA =Colors.WHITE): Puntainer {
         solidRect(virtualRectangle.width,virtualRectangle.height,colour)
         return this
@@ -106,6 +135,7 @@ open class Puntainer: Container {
         }.also {
             p.reshape(it)
         }
+        sortPuntainersByZ()
     }
 
 
