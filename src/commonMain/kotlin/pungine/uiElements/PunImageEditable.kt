@@ -1,33 +1,23 @@
-package pungine
+package pungine.uiElements
 
-import com.soywiz.korge.internal.KorgeInternal
-import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.Image
-import com.soywiz.korge.view.ViewFileRef
-import com.soywiz.korge.view.position
-import com.soywiz.korge.view.renderToBitmap
 import com.soywiz.korim.bitmap.Bitmap
-import com.soywiz.korim.bitmap.BmpSlice
 import com.soywiz.korim.bitmap.slice
-import com.soywiz.korim.bitmap.sliceWithSize
 import com.soywiz.korim.color.RGBA
-import com.soywiz.korim.format.readBitmap
-import com.soywiz.korim.format.writeTo
-import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.resources.Resourceable
-import com.soywiz.korma.geom.vector.VectorPath
 import modules.basic.Colour
 import pungine.geometry2D.Rectangle
+import pungine.geometry2D.oneRectangle
 
 /** This class handles simple image and it takes bitmap as an input,
  * It does not inherit Image directly, but it generates an Image into the puntainer, which it Inherits
  *
  */
-class PunImageEditable: PunImage{
-    constructor(id: String?=null,bitmap: Bitmap): super(id,bitmap){
+class PunImageEditable: PunImage {
+    constructor(id: String?=null, relativeRectangle: Rectangle = oneRectangle(), bitmap: Bitmap, zOrder: Int=0): super(id,relativeRectangle,bitmap,zOrder){
         bitmapDisplayed = bitmap
         bitmapSource = bitmap.clone()
     }
+
 
 
 

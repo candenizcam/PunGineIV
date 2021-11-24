@@ -10,9 +10,7 @@ import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korma.geom.Angle
 import modules.basic.Colour
-import pungine.PunImage
 import pungine.PunScene
-import pungine.Puntainer
 import pungine.geometry2D.Rectangle
 import pungine.geometry2D.oneRectangle
 
@@ -20,9 +18,10 @@ import pungine.geometry2D.oneRectangle
  *
  */
 
-class TestScene: PunScene() {
+class TestScene: PunScene(GlobalAccess.virtualSize.width.toDouble(),GlobalAccess.virtualSize.height.toDouble(), Colour.GRIZEL) {
     //override fun createSceneView(): Container = Puntainer()
 
+    /*
     override suspend fun Container.sceneInit(): Unit{
 
 
@@ -36,25 +35,34 @@ class TestScene: PunScene() {
         super.sceneAfterInit()
     }
 
+     */
+
+    override suspend fun sceneInit() {
+        openingCrawl()
+
+    }
+
+    override fun update(ms: Double) {
+
+    }
+
 
     // delete from all under here for a new scene
 
     suspend fun openingCrawl(){
 
-        val bg = scenePuntainer.solidRect("id",Rectangle(0.0,1.0,0.0,1.0),Colour.rgba(0.04,0.02,0.04,1.0))
+        val bg = solidRect("id", Rectangle(0.0,1.0,0.0,1.0),Colour.rgba(0.04,0.02,0.04,1.0))
 
 
-        val img = scenePuntainer.punImage("id",Rectangle(390.0,890.0,110.0,610.0),resourcesVfs["pungo_transparent.png"].readBitmap()).also {
+        val img = punImage("id",Rectangle(390.0/scenePuntainer.width,890.0/scenePuntainer.width,110.0/scenePuntainer.height,610.0/scenePuntainer.height),resourcesVfs["pungo_transparent.png"].readBitmap()).also {
             it.visible=false
         }
 
 
 
 
-
         val resource = resourcesVfs["PunGine.png"].readBitmap()
-        PunImage("id",resource).also {
-            scenePuntainer.addPuntainer(it,Rectangle(0.0,1.0,0.0,1.0),relative = true)
+        punImage("fader", oneRectangle(),bitmap = resource).also {
             it.alpha = 0.0
             var counter = 0.0
             it.addUpdater { dt: TimeSpan ->

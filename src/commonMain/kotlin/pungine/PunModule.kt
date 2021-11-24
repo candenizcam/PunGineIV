@@ -8,11 +8,11 @@ import com.soywiz.korinject.AsyncInjector
  *
  */
 object PunModule: Module() {
-    override val mainScene = PunScene::class
+    override val mainScene = PunStage::class
     override val size = InternalGlobalAccess.virtualSize // Virtual Size
     override val windowSize = InternalGlobalAccess.windowSize// Window Size
 
     override suspend fun AsyncInjector.configure() {
-        mapPrototype { PunScene(size.width.toDouble(), size.height.toDouble()) }
+        mapPrototype { PunStage(size.width.toDouble(), size.height.toDouble()) }
     }
 }

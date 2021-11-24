@@ -1,28 +1,37 @@
-package pungine
+package pungine.uiElements
 
 import com.soywiz.korge.input.*
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.color.RGBA
 import modules.basic.Colour
+import pungine.Puntainer
+import pungine.geometry2D.Rectangle
+import pungine.geometry2D.oneRectangle
 
 class Button: Puntainer {
-    constructor(id: String?=null, upBitmap: Bitmap, downBitmap: Bitmap){
-        this.addPuntainer(PunImage("up",upBitmap))
-        this.addPuntainer(PunImage("down",downBitmap))
+    constructor(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), upBitmap: Bitmap, downBitmap: Bitmap, hoverBitmap: Bitmap?=null, inactiveBitmap: Bitmap?=null, zOrder: Int=0): super(id,relativeRectangle,zOrder){
+        this.addPuntainer(PunImage("up",bitmap = upBitmap))
+        this.addPuntainer(PunImage("down",bitmap = downBitmap))
+        if(hoverBitmap!=null){
+            this.addPuntainer(PunImage("hover",bitmap = hoverBitmap))
+        }
+        if(inactiveBitmap!=null){
+            this.addPuntainer(PunImage("hover",bitmap = inactiveBitmap))
+        }
         events()
         adjustVisibility()
     }
 
 
-    constructor(id: String?=null,upBitmap: Bitmap, downRate: Double=0.5, inactiveRate: Double=0.2, hoverOffset: Int=20): super(id){
-        this.addPuntainer(PunImage("up",upBitmap))
+    constructor(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), upBitmap: Bitmap, downRate: Double=0.5, inactiveRate: Double=0.2, hoverOffset: Int=20, zOrder: Int=0): super(id,relativeRectangle,zOrder){
+        this.addPuntainer(PunImage("up",bitmap = upBitmap))
 
-        PunImage("down",upBitmap).also { down->
+        PunImage("down",bitmap = upBitmap).also { down->
             down.tint = Colour.rgba(downRate,downRate,downRate,1.0).korgeColor
             this.addPuntainer(down)
             down.visible=false
         }
-        PunImage("inactive",upBitmap).also { inactive->
+        PunImage("inactive",bitmap = upBitmap).also { inactive->
             inactive.tint = Colour.rgba(inactiveRate,inactiveRate,inactiveRate,1.0).korgeColor
             this.addPuntainer(inactive)
             inactive.visible=false
@@ -38,7 +47,7 @@ class Button: Puntainer {
             }
         }
 
-        PunImage("hover",newBitmap).also { hover->
+        PunImage("hover",bitmap = newBitmap).also { hover->
             this.addPuntainer(hover)
             hover.visible=false
         }

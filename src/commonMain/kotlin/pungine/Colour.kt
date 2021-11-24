@@ -25,41 +25,41 @@ class Colour private constructor(r: Double, g: Double, b: Double, a: Double) {
         }
 
         fun hsva(h: Double, s: Double, v: Double, a: Double=1.0): Colour{
-            val h = h.coerceIn(0.0,1.0)
-            val s = s.coerceIn(0.0,1.0)
-            val v = v.coerceIn(0.0,1.0)
-            val a = a.coerceIn(0.0,1.0)
-            val hCirc = (h*360).toInt()
-            val c = v*s
-            val m: Double = v-c
+            val hue = h.coerceIn(0.0,1.0)
+            val saturation = s.coerceIn(0.0,1.0)
+            val value = v.coerceIn(0.0,1.0)
+            val alpha = a.coerceIn(0.0,1.0)
+            val hCirc = (hue*360).toInt()
+            val c = value*saturation
+            val m: Double = value-c
             val x: Double = c*(1f - abs((hCirc/60.0)%2-1.0))
             return when(hCirc){
                 in 0..60 ->{
-                    Colour(c+m,x+m,m,a)
+                    Colour(c+m,x+m,m,alpha)
                 }
                 in 60..120->{
-                    Colour(x+m,c+m,m,a)
+                    Colour(x+m,c+m,m,alpha)
                 }
                 in 120..180->{
-                    Colour(m,c+m,x+m,a)
+                    Colour(m,c+m,x+m,alpha)
                 }
                 in 180..240->{
-                    Colour(m,x+m,c+m,a)
+                    Colour(m,x+m,c+m,alpha)
                 }
                 in 240..300->{
-                    Colour(x+m,m,c+m,a)
+                    Colour(x+m,m,c+m,alpha)
                 }
                 in 300..360->{
-                    Colour(c+m,m,x+m,a)
+                    Colour(c+m,m,x+m,alpha)
                 }
                 else ->{
-                    Colour(m,m,m,a)
+                    Colour(m,m,m,alpha)
                 }
             }.also {
                 it.setHex()
-                it.hue = h
-                it.saturation = s
-                it.value = v
+                it.hue = hue
+                it.saturation = saturation
+                it.value = value
             }
         }
 
