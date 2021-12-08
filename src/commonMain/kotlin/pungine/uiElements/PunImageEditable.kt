@@ -2,8 +2,11 @@ package pungine.uiElements
 
 import com.soywiz.korge.view.Image
 import com.soywiz.korim.bitmap.Bitmap
+import com.soywiz.korim.bitmap.BitmapSlice
+import com.soywiz.korim.bitmap.context2d
 import com.soywiz.korim.bitmap.slice
 import com.soywiz.korim.color.RGBA
+import com.soywiz.korim.vector.Context2d
 import modules.basic.Colour
 import pungine.geometry2D.Rectangle
 import pungine.geometry2D.oneRectangle
@@ -16,6 +19,25 @@ class PunImageEditable: PunImage {
     constructor(id: String?=null, relativeRectangle: Rectangle = oneRectangle(), bitmap: Bitmap, zOrder: Int=0): super(id,relativeRectangle,bitmap,zOrder){
         bitmapDisplayed = bitmap
         bitmapSource = bitmap.clone()
+    }
+
+    constructor(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), bitmapSlice: BitmapSlice<Bitmap>, zOrder: Int=0): super(id,relativeRectangle,bitmapSlice,zOrder){
+        bitmapSlice.extract().also {
+            bitmapDisplayed = it
+            bitmapSource = it.clone()
+        }
+    }
+
+
+    fun context2d(resetFirst: Boolean=false, func: (Context2d)->Unit): PunImageEditable {
+        if(resetFirst){
+            resetBitmap()
+        }
+        bitmapDisplayed.context2d {
+            func(this)
+        }
+        applyModifications()
+        return this
     }
 
 
@@ -74,8 +96,13 @@ class PunImageEditable: PunImage {
 
     /** Upon modifying image, this function is called to change the displayed image
      */
-    fun applyModifications(){
-        (this.children[0] as Image).bitmap = this.bitmapDisplayed.clone().slice()
+    fun applyModifications(clone: Boolean = false){
+        if(clone){
+            (this.children[0] as Image).bitmap = this.bitmapDisplayed.clone().slice()
+        }else{
+            (this.children[0] as Image).bitmap = this.bitmapDisplayed.slice()
+        }
+
     }
 
 

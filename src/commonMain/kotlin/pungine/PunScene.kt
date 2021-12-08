@@ -1,5 +1,6 @@
 package pungine
 
+import com.soywiz.korge.input.mouse
 import com.soywiz.korge.view.RoundRect
 import com.soywiz.korge.view.solidRect
 import com.soywiz.korim.bitmap.Bitmap
@@ -9,6 +10,7 @@ import com.soywiz.korio.async.async
 import com.soywiz.korio.async.launchImmediately
 import modules.basic.Colour
 import pungine.geometry2D.Rectangle
+import pungine.geometry2D.Vector
 import pungine.geometry2D.oneRectangle
 import pungine.uiElements.PunImage
 import pungine.uiElements.PunText
@@ -53,6 +55,14 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
 
     }
 
+    fun relativeMousePoint(id: String): Vector {
+        return relativePuntainerPoint(id, mousePositionPixel)
+    }
+
+    fun relativePuntainerPoint(id: String, scenePoint: Vector): Vector {
+        return puntainers.first { it.id==id }.relativePoint(sceneRect.ratePoint(scenePoint))
+    }
+
     /** This is even safer
      *
      */
@@ -91,7 +101,17 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
 
 
 
+    val mousePositionPixel: Vector
+    get() {
+        scenePuntainer.mouse {
+            return Vector(this.currentPosStage.x,sceneRect.height - this.currentPosStage.y)
+        }
+    }
 
+    val mousePositionRated: Vector
+        get() {
+            return sceneRect.ratePoint(mousePositionPixel)
+        }
 
     val virtualWidth: Double
         get() {
@@ -149,16 +169,18 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
         }
     }
 
-    fun punImage(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), bitmap: Bitmap, zOrder: Int=0): Puntainer{
-        return scenePuntainer.punImage(id,relativeRectangle,bitmap,zOrder).also {
+    fun punImage(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), bitmap: Bitmap, zOrder: Int=0, editable: Boolean=false): Puntainer{
+        return scenePuntainer.punImage(id,relativeRectangle,bitmap,zOrder,editable).also {
             addPuntainer(it)
         }
+
     }
 
-    fun punImage(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), bitmap: BitmapSlice<Bitmap>, zOrder: Int=0): Puntainer{
-        return scenePuntainer.punImage(id,relativeRectangle,bitmap,zOrder).also {
+    fun punImage(id: String?=null, relativeRectangle: Rectangle= oneRectangle(), bitmap: BitmapSlice<Bitmap>, zOrder: Int=0, editable: Boolean=false): Puntainer{
+        return scenePuntainer.punImage(id,relativeRectangle,bitmap,zOrder,editable).also {
             addPuntainer(it)
         }
+
     }
 
 

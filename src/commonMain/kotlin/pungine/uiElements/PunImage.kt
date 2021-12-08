@@ -22,6 +22,11 @@ open class PunImage: Puntainer {
         this.addChild(image)
     }
 
+    val imagePixelRectangle: Rectangle
+    get() {
+        return Rectangle(0.0,image.bitmap.width.toDouble(),0.0,image.bitmap.height.toDouble())
+    }
+
 
 
 

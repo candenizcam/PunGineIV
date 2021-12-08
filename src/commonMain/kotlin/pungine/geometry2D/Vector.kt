@@ -1,19 +1,36 @@
 package pungine.geometry2D
 
 import com.soywiz.korma.geom.Point
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.PI
+import kotlin.math.*
 
 /** Vector is used as point where needed,
  *
  */
 data class Vector(val x: Double, val y: Double) {
+    constructor(korgePoint: Point): this(korgePoint.x,korgePoint.y)
 
+    val angleToX: Double
+    get() {
+        return if(x<0){
+            atan(slope)
+        }else{
+            atan(slope)+acos(-1.0)
+        }
+    }
 
     val slope: Double
         get() {
             return y/x
+        }
+
+    val length: Double
+        get(){
+            return sqrt(x*x+y*y)
+        }
+
+    val korgePoint: Point
+        get() {
+            return Point(x,y)
         }
 
     fun rotated(rad: Double): Point{

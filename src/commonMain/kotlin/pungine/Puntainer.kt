@@ -9,6 +9,7 @@ import pungine.geometry2D.Rectangle
 import pungine.geometry2D.Vector
 import pungine.geometry2D.oneRectangle
 import pungine.uiElements.PunImage
+import pungine.uiElements.PunImageEditable
 
 /** This is the one size fits all container for pungine, any specialized views should be inherited from this first, and then implemented as view children
  *
@@ -39,6 +40,10 @@ open class Puntainer: Container {
     //TODO a rectangle that gives the exact size
 
     var zOrder: Int = 0
+
+    fun relativePoint(screenRatedPoint: Vector): Vector {
+        return relativeRectangle.ratePoint(screenRatedPoint)
+    }
 
 
 
@@ -136,16 +141,31 @@ open class Puntainer: Container {
         }
     }
 
-    fun punImage(id: String?=null, relativeRectangle: Rectangle, bitmap: Bitmap, zOrder: Int=0): Puntainer{
-        return PunImage(id,relativeRectangle,bitmap,zOrder).also {
-            this.addPuntainer(it)
+    fun punImage(id: String?=null, relativeRectangle: Rectangle, bitmap: Bitmap, zOrder: Int=0, editable: Boolean=false): Puntainer{
+        return if(editable){
+            PunImageEditable(id, relativeRectangle, bitmap, zOrder).also {
+                this.addPuntainer(it)
+            }
+
+        }else{
+            PunImage(id,relativeRectangle,bitmap,zOrder).also {
+                this.addPuntainer(it)
+            }
         }
+
     }
 
-    fun punImage(id: String?=null, relativeRectangle: Rectangle, bitmap: BitmapSlice<Bitmap>, zOrder: Int=0): Puntainer{
-        return PunImage(id,relativeRectangle,bitmap,zOrder).also {
-            this.addPuntainer(it)
+    fun punImage(id: String?=null, relativeRectangle: Rectangle, bitmap: BitmapSlice<Bitmap>, zOrder: Int=0, editable: Boolean=false): Puntainer{
+        if(editable){
+            return PunImageEditable(id,relativeRectangle,bitmap,zOrder).also {
+                this.addPuntainer(it)
+            }
+        }else{
+            return PunImage(id,relativeRectangle,bitmap,zOrder).also {
+                this.addPuntainer(it)
+            }
         }
+
     }
 
 

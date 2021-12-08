@@ -109,6 +109,20 @@ class Rectangle {
         return Rectangle(w1,w2,h1,h2)
     }
 
+    /** Takes a point and rates it
+     * Rectangle(0.0,100.0,0.0,50.0).ratePoint(Vector(25.0,25.0)) = Vector(0.25,0.5)
+     */
+    fun ratePoint(other: Vector): Vector {
+        return Vector((other.x - left)/width, (other.y-bottom)/height)
+    }
+
+    /** Takes a rated point and decodes it
+     * Rectangle(0.0,100.0,0.0,50.0).ratedPoint(Vector(0.25,0.25)) = Vector(25.0,50.0)
+     */
+    fun ratedPoint(other: Vector): Vector{
+        return Vector(left + other.x*width, bottom + other.y*height)
+    }
+
 
     /** Translation functions, returns translated rectangles
      */
