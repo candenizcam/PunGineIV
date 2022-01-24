@@ -81,10 +81,16 @@ open class Puntainer: Container {
      *
      */
     open fun reshape(r: Rectangle){
-        scaleX = scaleX*r.width/globalBounds.width
-        scaleY = scaleY*r.height/globalBounds.height
-        x = x-globalBounds.x+r.left
-        y = y - globalBounds.y + (InternalGlobalAccess.virtualSize.height - r.top)
+        children.forEach {
+            if( it !is Puntainer){
+                scaledWidth = r.width
+                scaledHeight = r.height
+                r.getCorner(Rectangle.Corners.TOP_LEFT).also {
+                    position(it.x,InternalGlobalAccess.virtualSize.height -it.y)
+                }
+
+            }
+        }
         puntainers.forEach {
             it.reshape(r.fromRated(it.relativeRectangle))
         }

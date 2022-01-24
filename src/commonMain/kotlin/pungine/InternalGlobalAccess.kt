@@ -20,6 +20,6 @@ object InternalGlobalAccess {
     }
     val virtualRect: Rectangle
     get() {
-        return Rectangle(0.0,GlobalAccess.virtualSize.width.toDouble(),0.0,GlobalAccess.virtualSize.height.toDouble())
+        return GlobalAccess.virtualRect
     }
 }

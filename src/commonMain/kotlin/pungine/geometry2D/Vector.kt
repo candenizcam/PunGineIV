@@ -1,12 +1,13 @@
 package pungine.geometry2D
 
 import com.soywiz.korma.geom.Point
+import pungine.math.Maths
 import kotlin.math.*
 
 /** Vector is used as point where needed,
  *
  */
-data class Vector(val x: Double, val y: Double) {
+data class Vector(var x: Double, var y: Double) {
     constructor(korgePoint: Point): this(korgePoint.x,korgePoint.y)
 
     val angleToX: Double
@@ -32,6 +33,15 @@ data class Vector(val x: Double, val y: Double) {
         get() {
             return Point(x,y)
         }
+
+
+    fun yReversed(height: Double): Vector {
+        return Vector(x,height-y)
+    }
+
+    fun xReversed(width: Double): Vector {
+        return Vector(width-x,y)
+    }
 
     fun rotated(rad: Double): Point{
         return Point(x*cos(rad)-y*sin(rad),y*cos(rad)+x*sin(rad))
@@ -84,6 +94,6 @@ data class Vector(val x: Double, val y: Double) {
     }
 
     override fun toString(): String {
-        return "Point($x,$y)"
+        return "Point(${Maths.round(x,3)},${Maths.round(y,3)})"
     }
 }

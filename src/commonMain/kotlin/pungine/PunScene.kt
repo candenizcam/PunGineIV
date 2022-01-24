@@ -1,28 +1,28 @@
 package pungine
 
+import com.soywiz.korge.input.Input
 import com.soywiz.korge.input.mouse
-import com.soywiz.korge.view.RoundRect
 import com.soywiz.korge.view.solidRect
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.bitmap.BitmapSlice
-import com.soywiz.korinject.AsyncInjectorContext
-import com.soywiz.korio.async.async
-import com.soywiz.korio.async.launchImmediately
 import modules.basic.Colour
+import pungine.audio.MusicPlayer
 import pungine.geometry2D.Rectangle
 import pungine.geometry2D.Vector
 import pungine.geometry2D.oneRectangle
-import pungine.uiElements.PunImage
 import pungine.uiElements.PunText
 
 /** This is the class to inherit when designing a game
  * it is liberated from the clunky view and only has given methods
  * if you dont know about the backend of the frontend, you should not go any deeper
  */
-open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
+open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
+    var active = true
     var sceneRect: Rectangle
     val puntainers = mutableListOf<Puntainer>()
     val bgColour=bgColour
+    lateinit var musicPlayer: MusicPlayer
+    lateinit var sceneInput: Input
     lateinit var scenePuntainer: Puntainer
         protected set
     init {
@@ -30,11 +30,14 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
 
     }
 
-    constructor(width: Double,height: Double, bgColour: Colour=Colour.WHITE) : this(Rectangle(0.0,width,0.0,height),bgColour)
+    constructor(id: String, stage: PunStage, width: Double,height: Double, bgColour: Colour=Colour.WHITE) : this(id, stage, Rectangle(0.0,width,0.0,height),bgColour)
 
     open suspend fun sceneBeforeInit(){
+
         scenePuntainer = Puntainer("scenePuntainer",sceneRect)
         setBg(sceneRect.width,sceneRect.height,bgColour)
+        sceneInput = stage.views.input
+        musicPlayer = stage.musicPlayer
     }
 
     open suspend fun sceneInit(){
@@ -51,7 +54,7 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
         sceneAfterInit()
     }
 
-    open fun update(ms: Double){
+    open fun update(sec: Double){
 
     }
 
@@ -94,7 +97,7 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
         if(puntainer.zOrder!=initialZ){
             scenePuntainer.sortPuntainersByZ()
         }
-        if (if(puntainer is PunText){ puntainer.text }else{ "" }==initialText){
+        if (if(puntainer is PunText){ puntainer.text }else{ "" }!=initialText){
             puntainer.reshape(sceneRect.fromRated(puntainer.relativeRectangle))
         }
     }
@@ -104,8 +107,9 @@ open class PunScene(rectangle: Rectangle, bgColour: Colour=Colour.WHITE){
     val mousePositionPixel: Vector
     get() {
         scenePuntainer.mouse {
-            return Vector(this.currentPosStage.x,sceneRect.height - this.currentPosStage.y)
+            return Vector(sceneInput.mouse.x,sceneRect.height - sceneInput.mouse.y)
         }
+
     }
 
     val mousePositionRated: Vector
