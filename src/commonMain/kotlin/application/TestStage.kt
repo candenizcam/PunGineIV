@@ -16,13 +16,14 @@ import kotlin.time.measureTime
  */
 
 class TestStage: PunStage() {
-    var testScene = TestScene()
+    var testScene = TestScene(this)
 
     @OptIn(ExperimentalTime::class)
     override suspend fun Container.sceneMain(): Unit{
         testScene.initialize()
 
         addChild(testScene.scenePuntainer)
+        scenesToAdd.add(Pair(testScene,true))
 
         addUpdater { dt->
             testScene.update(dt.seconds)

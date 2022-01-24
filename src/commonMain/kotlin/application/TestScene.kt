@@ -11,6 +11,7 @@ import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korma.geom.Angle
 import modules.basic.Colour
 import pungine.PunScene
+import pungine.PunStage
 import pungine.geometry2D.Rectangle
 import pungine.geometry2D.oneRectangle
 
@@ -18,7 +19,7 @@ import pungine.geometry2D.oneRectangle
  *
  */
 
-class TestScene: PunScene(GlobalAccess.virtualSize.width.toDouble(),GlobalAccess.virtualSize.height.toDouble(), Colour.GRIZEL) {
+class TestScene(stage: PunStage): PunScene("testScene",stage,GlobalAccess.virtualSize.width.toDouble(),GlobalAccess.virtualSize.height.toDouble(), Colour.GRIZEL) {
     //override fun createSceneView(): Container = Puntainer()
 
     /*
