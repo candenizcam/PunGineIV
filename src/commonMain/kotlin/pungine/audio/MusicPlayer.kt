@@ -1,5 +1,6 @@
 package pungine.audio
 
+
 import com.soywiz.korau.sound.Sound
 import com.soywiz.korau.sound.SoundChannel
 import com.soywiz.korau.sound.readMusic
@@ -39,9 +40,14 @@ class MusicPlayer {
     }
 
     suspend fun open(file: String, playNow: Boolean = true) {
+        release()
         channels.clear()
         channels.add(resourcesVfs["music/$file"].readMusic().play())
         if (!playNow) channels.forEach { it.pause() }
+    }
+
+    fun togglePlaying() {
+        channels.forEach { it.togglePaused() }
     }
 
     fun release() {
@@ -55,4 +61,5 @@ class MusicPlayer {
     fun play() {
         channels.forEach { it.resume() }
     }
+
 }

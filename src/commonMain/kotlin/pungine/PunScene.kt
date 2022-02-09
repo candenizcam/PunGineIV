@@ -7,6 +7,7 @@ import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.bitmap.BitmapSlice
 import modules.basic.Colour
 import pungine.audio.MusicPlayer
+import pungine.audio.SfxPlayer
 import pungine.geometry2D.Rectangle
 import pungine.geometry2D.Vector
 import pungine.geometry2D.oneRectangle
@@ -21,7 +22,9 @@ open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectang
     var sceneRect: Rectangle
     val puntainers = mutableListOf<Puntainer>()
     val bgColour=bgColour
+    val updatables = mutableListOf<Updatable>()
     lateinit var musicPlayer: MusicPlayer
+    lateinit var sfxPlayer: SfxPlayer
     lateinit var sceneInput: Input
     lateinit var scenePuntainer: Puntainer
         protected set
@@ -38,6 +41,7 @@ open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectang
         setBg(sceneRect.width,sceneRect.height,bgColour)
         sceneInput = stage.views.input
         musicPlayer = stage.musicPlayer
+        sfxPlayer = stage.sfxPlayer
     }
 
     open suspend fun sceneInit(){
@@ -55,7 +59,7 @@ open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectang
     }
 
     open fun update(sec: Double){
-
+        updatables.forEach { it.update(sec) }
     }
 
     fun relativeMousePoint(id: String): Vector {
@@ -69,13 +73,13 @@ open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectang
     /** This is even safer
      *
      */
-    fun toPuntainer(id: String,onlyFirst: Boolean=false, func: (Puntainer)->Unit){
+    fun toPuntainer(id: String,onlyFirst: Boolean=false, forceReshape: Boolean=false, func: (Puntainer)->Unit){
         puntainers.filter { it.id==id }.also{
             if(onlyFirst){
-                toPuntainer(it.first(),func)
+                toPuntainer(it.first(),forceReshape,func)
             }else{
                 it.forEach {
-                    toPuntainer(it,func)
+                    toPuntainer(it,forceReshape,func)
                 }
             }
         }
@@ -85,13 +89,13 @@ open class PunScene(var id: String, open var stage: PunStage, rectangle: Rectang
     /** This function is called from body (possibly updater) and is used to influence puntainers in a safe way
      *
      */
-    fun toPuntainer(puntainer: Puntainer,func: (Puntainer)->Unit){
+    fun toPuntainer(puntainer: Puntainer,forceReshape: Boolean=false, func: (Puntainer)->Unit){
         val initialRect = puntainer.relativeRectangle
         val initialZ = puntainer.zOrder
         val initialText = if(puntainer is PunText){ puntainer.text }else{ "" }
         func(puntainer)
 
-        if(puntainer.relativeRectangle!=initialRect){
+        if(puntainer.relativeRectangle!=initialRect|| forceReshape){
             puntainer.reshape(sceneRect.fromRated(puntainer.relativeRectangle))
         }
         if(puntainer.zOrder!=initialZ){
