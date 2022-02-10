@@ -58,6 +58,7 @@ class Button: Puntainer {
     private fun events(){
         this.onDown {
             pushing=true
+            hovering=true
             adjustVisibility()
         }
 
